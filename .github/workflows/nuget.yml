@@ -1,0 +1,15 @@
+on:
+  push:
+    tags: [ '*' ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+    - run: |
+        cd Naratteu.Linq
+        dotnet pack -o . -p:Version=${GITHUB_REF##refs/tags/v}
+        dotnet nuget push *.nupkg -k ${{secrets.NU_TOKEN}} -s https://api.nuget.org/v3/index.json
