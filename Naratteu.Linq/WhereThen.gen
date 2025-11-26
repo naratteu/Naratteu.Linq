@@ -1,0 +1,19 @@
+﻿Console.WriteLine("""
+namespace Naratteu.Linq;
+
+partial class WhereThen
+{
+""");
+var group = typeof(Enumerable).GetMethods().GroupBy(m => m.Name)
+    .Where(g => g.All(m => m is { ReturnType.Name: "TSource" }))
+    .Where(g => g.Any(m => m.GetParameters() is [{ Name: "source" }, { Name: "predicate" }]));
+foreach (var g in group)
+{
+    var name = g.Key;
+    Console.WriteLine($"""
+    public static TResult {name}<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, Pair<TResult>> predicate) => source.Where(predicate).{name}();
+""");
+}
+Console.Write("""
+}
+""");

@@ -11,4 +11,13 @@
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Gen Include="**/*.gen" />
+  </ItemGroup>
+  <Target Name="gen" BeforeTargets="Compile">
+    <Exec Command="dotnet run --file &quot;%(Gen.Identity)&quot; > &quot;%(Gen.Identity).cs&quot;"
+      Condition="!Exists('%(Gen.Identity).cs')" />
+    <!--컴파일시점 코드생성 자동화 입니다.-->
+  </Target>
+
 </Project>
