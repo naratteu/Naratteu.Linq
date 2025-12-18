@@ -11,7 +11,7 @@ foreach (var g in group)
 {
     var name = g.Key;
     Console.WriteLine($"""
-    public static TResult {name}<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, Pair<TResult>> predicate) => source.Where(predicate).{name}();
+    public static TResult{(name.EndsWith("OrDefault") ? "?" : "")} {name}<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, Pair<TResult>> predicate) => source.Where(predicate).{name}();
 """);
 }
 Console.Write("""
