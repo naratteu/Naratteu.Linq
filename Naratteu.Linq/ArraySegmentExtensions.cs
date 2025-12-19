@@ -14,11 +14,10 @@ public static class ArraySegmentExtensions
         for (int cnt; seg is [var fst, ..]; seg = seg.Slice(cnt))
             yield return seg.Slice(0, cnt = 1 + seg.Slice(1).Select(match).TakeWhile(match(fst).Equals).Count());
     }
-    public static IEnumerable<ArraySegment<T>> SegmentBy<T>(this ArraySegment<T> seg, Func<T, T, bool> match) => SegmentBy(seg, zip => match(zip.First, zip.Second));
-    public static IEnumerable<ArraySegment<T>> SegmentBy<T>(this ArraySegment<T> seg, Func<(T First, T Second), bool> match)
+    public static IEnumerable<ArraySegment<T>> SegmentBy<T>(this ArraySegment<T> seg, Func<T, T, bool> match)
     {
         for (int cnt; seg is [_, _, ..]; seg = seg.Slice(cnt))
-            yield return seg.Slice(0, cnt = 1 + seg.Zip(seg.Slice(1)).TakeWhile(match).Count());
+            yield return seg.Slice(0, cnt = 1 + seg.Zip(seg.Slice(1)).TakeWhile(zip => match(zip.First, zip.Second)).Count());
         if (seg is not [])
             yield return seg;
     }
